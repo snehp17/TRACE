@@ -1,7 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { dataRegistry } from './data/dataRegistry';
-import { analyzeConnections } from './engine/relationshipEngine';
-import { buildStoryChapters } from './engine/chapterBuilder';
+import React, { useState } from 'react';
+import { useArchive } from './context/ArchiveContext';
 
 import ArchiveHeader from './components/ArchiveHeader';
 import ArchiveOverview from './components/ArchiveOverview';
@@ -12,81 +10,35 @@ import PatternInsights from './components/PatternInsights';
 import ReceiptDetailModal from './components/ReceiptDetailModal';
 import AddReceiptFAB from './components/AddReceiptFAB';
 
+// Innovation Components
+import AudioAmbiencePlayer from './components/AudioAmbiencePlayer';
+import ExportStoryModal from './components/ExportStoryModal';
+import EraComparisonModal from './components/EraComparisonModal';
+import { Download, GitCompare } from 'lucide-react';
+
 export default function App() {
-  const [activeSourceId, setActiveSourceId] = useState('household');
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const {
+    activeSourceId,
+    setActiveSourceId,
+    activeAdapter,
+    allRecords,
+    relationshipData,
+    storyChapters,
+    activeTab,
+    setActiveTab,
+    selectedReceipt,
+    setSelectedReceipt,
+    isAddReceiptOpen,
+    setIsAddReceiptOpen,
+    explorerFilters,
+    setExplorerFilters,
+    filterByCategory,
+    filterByDate,
+    filterByDayOfWeek
+  } = useArchive();
 
-  // Active Adapter & Records
-  const activeAdapter = useMemo(() => {
-    return dataRegistry.getAdapter(activeSourceId);
-  }, [activeSourceId]);
-
-  const allRecords = useMemo(() => {
-    return activeAdapter.getAllRecords();
-  }, [activeAdapter]);
-
-  // Detected relationships
-  const relationshipData = useMemo(() => {
-    if (activeAdapter.detectRelationships) {
-      return activeAdapter.detectRelationships(allRecords.slice(0, 300));
-    }
-    return analyzeConnections(allRecords.slice(0, 300));
-  }, [activeAdapter, allRecords]);
-
-  // Story Chapters
-  const storyChapters = useMemo(() => {
-    return buildStoryChapters(activeAdapter, allRecords);
-  }, [activeAdapter, allRecords]);
-
-  // Filters state for Explorer (supports deep-linking from Pattern Insights)
-  const [explorerFilters, setExplorerFilters] = useState({
-    search: '',
-    category: 'all',
-    mode: 'all',
-    year: 'all',
-    date: '',
-    dayOfWeek: 'all'
-  });
-
-  // Switch Dataset
-  const handleSelectSource = (sourceId) => {
-    setActiveSourceId(sourceId);
-    setExplorerFilters({
-      search: '',
-      category: 'all',
-      mode: 'all',
-      year: 'all',
-      date: '',
-      dayOfWeek: 'all'
-    });
-  };
-
-  const [isAddReceiptOpen, setIsAddReceiptOpen] = useState(false);
-
-  // Smooth scroll to top on tab switch
-  const handleSelectTab = (tab) => {
-    setActiveTab(tab);
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
-
-  // Filter by category navigation from Insights
-  const handleFilterByCategory = (categoryName) => {
-    setExplorerFilters(prev => ({ ...prev, category: categoryName, date: '', dayOfWeek: 'all' }));
-    handleSelectTab('explorer');
-  };
-
-  // Filter by specific day from Insights
-  const handleFilterByDate = (dateStr) => {
-    setExplorerFilters(prev => ({ ...prev, date: dateStr, category: 'all', dayOfWeek: 'all' }));
-    handleSelectTab('explorer');
-  };
-
-  // Filter by day of week from Insights
-  const handleFilterByDayOfWeek = (dayName) => {
-    setExplorerFilters(prev => ({ ...prev, dayOfWeek: dayName, date: '', category: 'all' }));
-    handleSelectTab('explorer');
-  };
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isEraComparisonOpen, setIsEraComparisonOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-archive-900 text-archive-100 font-sans selection:bg-amber-accent selection:text-archive-950">
@@ -94,13 +46,53 @@ export default function App() {
       {/* Sidebar / Mobile Header */}
       <ArchiveHeader
         activeTab={activeTab}
-        onSelectTab={handleSelectTab}
+        onSelectTab={setActiveTab}
         activeAdapter={activeAdapter}
         onOpenAddReceipt={() => setIsAddReceiptOpen(true)}
       />
 
       {/* Main Content — offset by sidebar width on desktop, top bar on mobile */}
       <div className="lg:pl-56 xl:pl-60 pt-14 lg:pt-0 min-h-screen flex flex-col">
+        
+        {/* Top Museum Innovation & Ambience Ribbon */}
+        <div className="border-b border-archive-700/50 bg-archive-950/70 backdrop-blur-md px-4 sm:px-6 xl:px-8 py-2.5 flex items-center justify-between gap-3 text-xs font-mono">
+          <div className="flex items-center space-x-2 text-archive-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold text-paper truncate">{activeAdapter.name}</span>
+            <span className="hidden md:inline text-archive-600">·</span>
+            <span className="hidden md:inline text-archive-500">{allRecords.length.toLocaleString()} records indexed</span>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            {/* Museum Soundscape Player */}
+            <AudioAmbiencePlayer />
+
+            {/* Compare Eras Synthesizer */}
+            <button
+              type="button"
+              onClick={() => setIsEraComparisonOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-archive-900 hover:bg-archive-850 border border-archive-700/60 text-archive-300 hover:text-white transition-all cursor-pointer"
+              title="Compare behavioral shifts across time eras"
+              aria-label="Open Chrono-Era Synthesizer"
+            >
+              <GitCompare className="w-3.5 h-3.5 text-sage-accent" />
+              <span className="hidden sm:inline">Compare Eras</span>
+            </button>
+
+            {/* Export Museum Dossier */}
+            <button
+              type="button"
+              onClick={() => setIsExportOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-archive-900 hover:bg-archive-850 border border-archive-700/60 text-archive-300 hover:text-white transition-all cursor-pointer"
+              title="Download exhibition dossier as Markdown or JSON"
+              aria-label="Export Museum Dossier"
+            >
+              <Download className="w-3.5 h-3.5 text-amber-accent" />
+              <span className="hidden sm:inline">Export Dossier</span>
+            </button>
+          </div>
+        </div>
+
         {/* Subtle holographic entrance sweep bar */}
         <div key={`sweep-${activeTab}`} className="h-[2px] w-full bg-gradient-to-r from-transparent via-amber-accent to-transparent opacity-80 animate-pulse-subtle" />
 
@@ -110,8 +102,8 @@ export default function App() {
               <ArchiveOverview
                 activeAdapter={activeAdapter}
                 activeSourceId={activeSourceId}
-                onSelectSource={handleSelectSource}
-                onNavigate={handleSelectTab}
+                onSelectSource={setActiveSourceId}
+                onNavigate={setActiveTab}
                 relationshipData={relationshipData}
                 totalRecordsCount={allRecords.length}
               />
@@ -148,9 +140,9 @@ export default function App() {
               <PatternInsights
                 records={allRecords}
                 activeAdapter={activeAdapter}
-                onFilterByCategory={handleFilterByCategory}
-                onFilterByDate={handleFilterByDate}
-                onFilterByDayOfWeek={handleFilterByDayOfWeek}
+                onFilterByCategory={filterByCategory}
+                onFilterByDate={filterByDate}
+                onFilterByDayOfWeek={filterByDayOfWeek}
               />
             )}
           </div>
@@ -166,11 +158,28 @@ export default function App() {
           />
         )}
 
-        {/* Floating Add Receipt button — collapsible, auto-shrinks on scroll so it never blocks reading */}
+        {/* Floating Add Receipt button */}
         <AddReceiptFAB
           isOpen={isAddReceiptOpen}
           onOpenChange={setIsAddReceiptOpen}
           onReceiptAdded={() => {}}
+        />
+
+        {/* Innovation Modals */}
+        <ExportStoryModal
+          isOpen={isExportOpen}
+          onClose={() => setIsExportOpen(false)}
+          activeAdapter={activeAdapter}
+          chapters={storyChapters}
+          relationshipData={relationshipData}
+          totalRecords={allRecords.length}
+        />
+
+        <EraComparisonModal
+          isOpen={isEraComparisonOpen}
+          onClose={() => setIsEraComparisonOpen(false)}
+          records={allRecords}
+          activeAdapter={activeAdapter}
         />
 
         {/* Footer */}
