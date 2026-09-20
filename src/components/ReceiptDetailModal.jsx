@@ -56,8 +56,8 @@ export default function ReceiptDetailModal({
     const mins = Math.floor(receipt.amount / 60);
     const secs = receipt.amount % 60;
     formattedValue = `${mins}m ${secs}s`;
-  } else if (receipt.amount !== undefined) {
-    formattedValue = `₹${receipt.amount.toLocaleString()} ${receipt.currency || 'INR'}`;
+  } else if (receipt.amount != null && !isNaN(Number(receipt.amount))) {
+    formattedValue = `₹${Number(receipt.amount).toLocaleString()} ${receipt.currency || 'INR'}`;
   }
 
   // Gen Z "Vibe Check" / Aura Analysis
@@ -108,14 +108,14 @@ export default function ReceiptDetailModal({
         desc: 'Core track in personal life soundtrack'
       };
     } else {
-      if (receipt.amount >= 2000) {
+      if (receipt.amount != null && Number(receipt.amount) >= 2000) {
         return {
           tag: 'BIG SPLURGE ENERGY',
           emoji: '💸',
           color: '#F59E0B',
           bg: 'rgba(245, 158, 11, 0.15)',
           border: 'rgba(245, 158, 11, 0.4)',
-          desc: `₹${receipt.amount.toLocaleString()} high-conviction expenditure`
+          desc: `₹${Number(receipt.amount).toLocaleString()} high-conviction expenditure`
         };
       }
       if (receipt.category?.toLowerCase().includes('food') || receipt.category?.toLowerCase().includes('dining')) {

@@ -171,8 +171,8 @@ export default function PatternInsights({
           </div>
           <div className="text-xl sm:text-2xl font-bold font-mono text-paper">
             {isSpotify
-              ? `${metadata.metrics?.totalListeningHours?.toLocaleString()} hrs`
-              : `₹${insights.totalVolume?.toLocaleString()}`}
+              ? `${(metadata.metrics?.totalListeningHours || 0).toLocaleString()} hrs`
+              : `₹${(insights.totalVolume || 0).toLocaleString()}`}
           </div>
           <div className="text-[11px] text-archive-400 font-mono mt-0.5">
             Accumulated life volume
@@ -188,7 +188,7 @@ export default function PatternInsights({
             {isSpotify
               ? `${metadata.metrics?.overallSkipRate || 31}%`
               : isHousehold
-              ? `₹${metadata.metrics?.totalExpense?.toLocaleString()}`
+              ? `₹${(metadata.metrics?.totalExpense || 0).toLocaleString()}`
               : `${metadata.metrics?.anomaliesDetected || 0} flagged`}
           </div>
           <div className="text-[11px] text-archive-400 font-mono mt-0.5">
@@ -458,7 +458,7 @@ export default function PatternInsights({
                 <div className="text-lg font-bold font-mono text-amber-accent mt-0.5">
                   {isSpotify
                     ? `${Math.round(inspectedDayData.volume / 60)} mins`
-                    : `₹${inspectedDayData.volume.toLocaleString()}`}
+                    : `₹${(inspectedDayData.volume || 0).toLocaleString()}`}
                 </div>
               </div>
 

@@ -21,8 +21,8 @@ export default function ReceiptCard({
     const mins = Math.floor(receipt.amount / 60);
     const secs = receipt.amount % 60;
     valueLabel = `${mins}m ${secs}s`;
-  } else if (receipt.amount !== undefined) {
-    valueLabel = `₹${receipt.amount.toLocaleString()}`;
+  } else if (receipt.amount != null && !isNaN(Number(receipt.amount))) {
+    valueLabel = `₹${Number(receipt.amount).toLocaleString()}`;
   }
 
   return (

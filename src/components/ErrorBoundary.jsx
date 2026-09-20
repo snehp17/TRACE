@@ -12,7 +12,7 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // Graceful error logging without crashing user session
+    console.error("TRACE ErrorBoundary caught error:", error, errorInfo);
   }
 
   handleReset = () => {
@@ -37,6 +37,11 @@ export default class ErrorBoundary extends React.Component {
               <p className="text-xs text-archive-400 font-mono leading-relaxed">
                 An isolated rendering error was intercepted safely by TRACE Reliability Sentinels. Your stored receipts remain safe.
               </p>
+              {this.state.error && (
+                <div className="p-3 rounded-lg bg-black/60 border border-rose-500/40 text-[11px] font-mono text-rose-300 text-left overflow-x-auto">
+                  <p className="font-bold">{this.state.error.name}: {this.state.error.message}</p>
+                </div>
+              )}
             </div>
             <button
               onClick={this.handleReset}
