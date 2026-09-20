@@ -184,3 +184,18 @@ export function filterReceipts(records, filters = {}) {
 
   return filtered;
 }
+
+export function getNodeCategoryColor(category) {
+  if (!category) return '#D9A15C';
+  const norm = String(category).trim().toLowerCase();
+  if (norm.includes('trans') || norm.includes('travel') || norm.includes('commute')) return '#7CB49C'; // Sage
+  if (norm.includes('food') || norm.includes('dining') || norm.includes('grocery') || norm.includes('snack')) return '#D9A15C'; // Amber
+  if (norm.includes('music') || norm.includes('audio') || norm.includes('stream') || norm.includes('sub')) return '#9B83D8'; // Lavender
+  if (norm.includes('shop') || norm.includes('ecommerce')) return '#BEAEE8';
+  if (norm.includes('fest') || norm.includes('cultur')) return '#E6A868';
+  if (norm.includes('fam') || norm.includes('home') || norm.includes('house')) return '#548C74';
+  if (norm.includes('fit') || norm.includes('health') || norm.includes('med')) return '#489B85';
+  if (norm.includes('tech') || norm.includes('elect')) return '#8EA7E9';
+  if (norm.includes('anom') || norm.includes('fraud') || norm.includes('risk')) return '#E06C75';
+  return '#D9A15C';
+}

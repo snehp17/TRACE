@@ -1,6 +1,6 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { analyzeConnections, filterReceipts } from './relationshipEngine.js';
+import { analyzeConnections, filterReceipts, getNodeCategoryColor } from './relationshipEngine.js';
 import { getChapterAesthetics } from './chapterAesthetics.js';
 
 describe('Relationship Engine & Architecture Tests', () => {
@@ -90,5 +90,15 @@ describe('Relationship Engine & Architecture Tests', () => {
     assert.equal(aes.visualType, 'train-ticket');
     assert.ok(aes.accentColor);
     assert.ok(aes.emoji);
+  });
+
+  test('getNodeCategoryColor maps categories accurately and securely', () => {
+    assert.equal(getNodeCategoryColor('Transportation'), '#7CB49C');
+    assert.equal(getNodeCategoryColor('food'), '#D9A15C');
+    assert.equal(getNodeCategoryColor('Music Stream'), '#9B83D8');
+    assert.equal(getNodeCategoryColor('online_shopping'), '#BEAEE8');
+    assert.equal(getNodeCategoryColor(null), '#D9A15C');
+    assert.equal(getNodeCategoryColor(undefined), '#D9A15C');
+    assert.equal(getNodeCategoryColor('unknown_category'), '#D9A15C');
   });
 });
