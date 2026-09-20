@@ -14,7 +14,14 @@ export default function ArchiveHeader({ activeTab, onSelectTab, activeAdapter, o
   return (
     <>
       <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-56 xl:w-60 z-40 bg-archive-950 border-r border-archive-700/50 select-none">
-        <div className="flex items-center space-x-3 px-5 py-5 border-b border-archive-700/40 cursor-pointer group" onClick={() => onSelectTab("overview")}>
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label="Go to Archive Overview"
+          className="flex items-center space-x-3 px-5 py-5 border-b border-archive-700/40 cursor-pointer group focus:outline-none focus:ring-1 focus:ring-amber-accent/50"
+          onClick={() => onSelectTab("overview")}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSelectTab("overview"); }}
+        >
           <div className="relative flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-archive-800 to-archive-900 border border-amber-accent/50 shadow-glow-amber group-hover:border-amber-accent transition-all">
             <span className="font-editorial text-xl font-bold tracking-wider text-amber-accent">T</span>
             <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-accent animate-pulse-subtle" />
@@ -81,14 +88,27 @@ export default function ArchiveHeader({ activeTab, onSelectTab, activeAdapter, o
       </aside>
 
       <header className="lg:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-archive-950/95 backdrop-blur-md border-b border-archive-700/50 flex items-center justify-between px-4">
-        <div className="flex items-center space-x-2.5 cursor-pointer" onClick={() => onSelectTab("overview")}>
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label="Go to Archive Overview"
+          className="flex items-center space-x-2.5 cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-accent/50"
+          onClick={() => onSelectTab("overview")}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSelectTab("overview"); }}
+        >
           <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-archive-800 to-archive-900 border border-amber-accent/50">
             <span className="font-editorial text-lg font-bold text-amber-accent">T</span>
           </div>
           <span className="font-bold text-white font-sans">TRACE</span>
           <span className="text-[9px] uppercase font-mono px-1.5 py-0.5 rounded bg-archive-800 border border-archive-700 text-archive-400">Archive</span>
         </div>
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg text-archive-300 hover:text-white hover:bg-archive-800 transition-colors">
+        <button
+          type="button"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileOpen}
+          className="p-2 rounded-lg text-archive-300 hover:text-white hover:bg-archive-800 transition-colors"
+        >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </header>

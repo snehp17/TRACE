@@ -188,9 +188,11 @@ export default function ReceiptExplorer({
             />
             {selectedDate && (
               <button
+                type="button"
                 onClick={() => setSelectedDate('')}
-                className="text-archive-400 hover:text-amber-accent text-xs font-mono ml-0.5"
+                className="text-archive-400 hover:text-amber-accent text-xs font-mono ml-0.5 cursor-pointer"
                 title="Clear specific day"
+                aria-label="Clear specific day filter"
               >
                 ✕
               </button>
@@ -292,9 +294,11 @@ export default function ReceiptExplorer({
               <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-amber-accent/20 border border-amber-accent/50 text-amber-accent text-xs font-mono">
                 <span>Filtered to Specific Day: <strong>{selectedDate}</strong> ({filteredRecords.length} records)</span>
                 <button
+                  type="button"
                   onClick={() => setSelectedDate('')}
-                  className="hover:text-white font-bold ml-1"
+                  className="hover:text-white font-bold ml-1 cursor-pointer"
                   title="Clear day filter"
+                  aria-label="Clear day filter"
                 >
                   ✕
                 </button>
@@ -304,9 +308,11 @@ export default function ReceiptExplorer({
               <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-lavender-accent/20 border border-lavender-accent/50 text-lavender-accent text-xs font-mono">
                 <span>Filtered to: <strong>{selectedDayOfWeek}s</strong> ({filteredRecords.length} records)</span>
                 <button
+                  type="button"
                   onClick={() => setSelectedDayOfWeek('all')}
-                  className="hover:text-white font-bold ml-1"
+                  className="hover:text-white font-bold ml-1 cursor-pointer"
                   title="Clear weekday filter"
+                  aria-label="Clear weekday filter"
                 >
                   ✕
                 </button>

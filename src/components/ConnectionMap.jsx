@@ -133,6 +133,16 @@ export default function ConnectionMap({
     onSelectReceipt(node);
   };
 
+  // Close evidence modal on Escape key
+  useEffect(() => {
+    if (!selectedConnection) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setSelectedConnection(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedConnection]);
+
   // ─── Pan/drag handlers ───────────────────────────────────────────
   const handleSvgMouseDown = (e) => {
     // Only primary button, don't start drag on node/link clicks
@@ -227,23 +237,29 @@ export default function ConnectionMap({
             {viewMode === 'graph' && (
               <div className="flex items-center space-x-1 bg-archive-900 p-1 rounded-xl border border-archive-700/60">
                 <button
+                  type="button"
                   onClick={() => setZoomLevel(prev => Math.min(prev + 0.25, 2.5))}
-                  className="p-1.5 text-archive-400 hover:text-white hover:bg-archive-800 rounded-lg transition-colors"
+                  className="p-1.5 text-archive-400 hover:text-white hover:bg-archive-800 rounded-lg transition-colors cursor-pointer"
                   title="Zoom In"
+                  aria-label="Zoom in on connection graph"
                 >
                   <ZoomIn className="w-4 h-4" />
                 </button>
                 <button
+                  type="button"
                   onClick={() => setZoomLevel(prev => Math.max(prev - 0.25, 0.4))}
-                  className="p-1.5 text-archive-400 hover:text-white hover:bg-archive-800 rounded-lg transition-colors"
+                  className="p-1.5 text-archive-400 hover:text-white hover:bg-archive-800 rounded-lg transition-colors cursor-pointer"
                   title="Zoom Out"
+                  aria-label="Zoom out on connection graph"
                 >
                   <ZoomOut className="w-4 h-4" />
                 </button>
                 <button
+                  type="button"
                   onClick={resetView}
-                  className="p-1.5 text-archive-400 hover:text-white hover:bg-archive-800 rounded-lg transition-colors"
+                  className="p-1.5 text-archive-400 hover:text-white hover:bg-archive-800 rounded-lg transition-colors cursor-pointer"
                   title="Reset View"
+                  aria-label="Reset zoom and center view"
                 >
                   <RotateCcw className="w-4 h-4" />
                 </button>
@@ -539,7 +555,13 @@ export default function ConnectionMap({
 
       {/* Selected Connection Evidence Card Modal / Drawer */}
       {selectedConnection && (
-        <div className="fixed inset-0 z-50 bg-archive-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="evidence-inspector-title"
+          className="fixed inset-0 z-50 bg-archive-950/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setSelectedConnection(null); }}
+        >
           <div className="bg-archive-850 border border-amber-accent/60 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 animate-slide-up relative text-left">
             
             <div className="flex items-center justify-between border-b border-archive-700/60 pb-3">
@@ -547,13 +569,15 @@ export default function ConnectionMap({
                 <span className="p-1 rounded bg-amber-accent/20 text-amber-accent">
                   <Sparkles className="w-4 h-4" />
                 </span>
-                <span className="font-mono text-xs uppercase tracking-wider text-amber-accent font-bold">
+                <span id="evidence-inspector-title" className="font-mono text-xs uppercase tracking-wider text-amber-accent font-bold">
                   Connection Evidence Inspector
                 </span>
               </div>
               <button
+                type="button"
                 onClick={() => setSelectedConnection(null)}
-                className="text-archive-400 hover:text-white font-mono text-sm px-2 py-1 rounded bg-archive-900 border border-archive-700"
+                aria-label="Close Connection Evidence Inspector"
+                className="text-archive-400 hover:text-white font-mono text-sm px-2 py-1 rounded bg-archive-900 border border-archive-700 cursor-pointer"
               >
                 ✕ Close
               </button>

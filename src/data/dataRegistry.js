@@ -1,6 +1,6 @@
-import { spotifyAdapter } from './spotifyAdapter';
-import { householdAdapter } from './householdAdapter';
-import { transactionAdapter } from './transactionAdapter';
+import { spotifyAdapter } from './spotifyAdapter.js';
+import { householdAdapter } from './householdAdapter.js';
+import { transactionAdapter } from './transactionAdapter.js';
 
 export const ALL_ADAPTERS = [
   householdAdapter,

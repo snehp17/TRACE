@@ -27,8 +27,17 @@ export default function ReceiptCard({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`Inspect receipt ${receipt.title} - ${valueLabel || receipt.category}`}
       onClick={() => onSelectReceipt(receipt)}
-      className="group relative bg-archive-850 hover:bg-archive-800 border border-archive-700/60 hover:border-amber-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer flex flex-col justify-between shadow-sm hover:shadow-glow-amber text-left"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelectReceipt(receipt);
+        }
+      }}
+      className="group relative bg-archive-850 hover:bg-archive-800 border border-archive-700/60 hover:border-amber-accent/50 rounded-xl p-4 transition-all duration-200 cursor-pointer flex flex-col justify-between shadow-sm hover:shadow-glow-amber text-left focus:outline-none focus:ring-2 focus:ring-amber-accent/60"
     >
       {/* Top Header: ID & Timestamp */}
       <div>

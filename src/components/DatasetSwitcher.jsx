@@ -30,8 +30,11 @@ export default function DatasetSwitcher({ activeSourceId, onSelectSource }) {
           return (
             <button
               key={adapter.id}
+              type="button"
               onClick={() => onSelectSource(adapter.id)}
-              className={`group text-left p-3 rounded-lg transition-all duration-200 border relative overflow-hidden flex flex-col justify-between ${
+              aria-pressed={isSelected}
+              aria-label={`Switch to ${adapter.name} archive (${meta.totalRecords?.toLocaleString()} records)`}
+              className={`group text-left p-3 rounded-lg transition-all duration-200 border relative overflow-hidden flex flex-col justify-between cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-accent/50 ${
                 isSelected
                   ? 'bg-archive-800 border-amber-accent/80 shadow-md ring-1 ring-amber-accent/30'
                   : 'bg-archive-900/60 border-archive-700/40 hover:bg-archive-800/80 hover:border-archive-600 text-archive-300'

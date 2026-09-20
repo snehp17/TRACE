@@ -132,9 +132,11 @@ export default function StoryChapters({
             return (
               <button
                 key={ch.id}
+                type="button"
                 onClick={() => navigateTo(ch.id, idx > activeChapterIndex ? 'forward' : 'backward')}
-                className="group flex-1 py-1.5 focus:outline-none"
+                className="group flex-1 py-1.5 focus:outline-none cursor-pointer"
                 title={`Jump to Ch. ${idx + 1}: ${ch.title}`}
+                aria-label={`Jump to Chapter ${idx + 1}: ${ch.title}`}
               >
                 <div className="w-full h-1.5 rounded-full bg-archive-800 overflow-hidden relative">
                   <div
@@ -406,15 +408,17 @@ export default function StoryChapters({
                 {chapters.map((ch, i) => (
                   <button
                     key={ch.id}
+                    type="button"
                     onClick={() => navigateTo(ch.id, i > activeChapterIndex ? 'forward' : 'backward')}
-                    className="rounded-full transition-all duration-300"
+                    className="rounded-full transition-all duration-300 cursor-pointer"
                     style={{
                       width: i === activeChapterIndex ? '28px' : '8px',
                       height: '8px',
                       backgroundColor: i === activeChapterIndex ? eraAesthetics.accentColor : '#32322C',
                       boxShadow: i === activeChapterIndex ? `0 0 10px ${eraAesthetics.accentColor}` : 'none'
                     }}
-                    title={`Go to Era ${i + 1}`}
+                    title={`Go to Era ${i + 1}: ${ch.title}`}
+                    aria-label={`Go to Era ${i + 1}: ${ch.title}`}
                   />
                 ))}
               </div>
