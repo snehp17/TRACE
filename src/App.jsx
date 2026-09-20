@@ -55,7 +55,7 @@ export default function App() {
       <div className="lg:pl-56 xl:pl-60 pt-14 lg:pt-0 min-h-screen flex flex-col">
         
         {/* Top Museum Innovation & Ambience Ribbon */}
-        <div className="border-b border-archive-700/50 bg-archive-950/70 backdrop-blur-md px-4 sm:px-6 xl:px-8 py-2.5 flex items-center justify-between gap-3 text-xs font-mono">
+        <div className="relative z-30 border-b border-archive-700/50 bg-archive-950/90 backdrop-blur-md px-4 sm:px-6 xl:px-8 py-2.5 flex items-center justify-between gap-3 text-xs font-mono">
           <div className="flex items-center space-x-2 text-archive-400">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-semibold text-paper truncate">{activeAdapter.name}</span>
